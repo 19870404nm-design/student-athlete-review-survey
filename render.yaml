@@ -1,0 +1,7 @@
+services:
+  - type: web
+    name: review-survey
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start

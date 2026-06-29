@@ -1,0 +1,1094 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>学生アスリート口コミ作成フォーム</title>
+  <style>
+    :root {
+      --bg: #f7f8f5;
+      --panel: #ffffff;
+      --ink: #1f2a2e;
+      --muted: #667477;
+      --line: #dce3df;
+      --accent: #0f766e;
+      --accent-dark: #0b5e58;
+      --accent-soft: #d8f0ec;
+      --warn: #9a5b13;
+      --warn-soft: #fff2d8;
+      --blue: #285f9f;
+      --blue-soft: #e7f0fb;
+      --shadow: 0 10px 28px rgba(31, 42, 46, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Yu Gothic", "Meiryo", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      color: var(--ink);
+      background:
+        linear-gradient(180deg, rgba(216, 240, 236, 0.65), rgba(247, 248, 245, 0) 280px),
+        var(--bg);
+      line-height: 1.65;
+    }
+
+    button, input, select, textarea {
+      font: inherit;
+    }
+
+    .app-shell {
+      min-height: 100vh;
+      display: grid;
+      grid-template-rows: auto 1fr;
+    }
+
+    header {
+      border-bottom: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.88);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 5;
+    }
+
+    .header-inner {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      min-height: 76px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .mark {
+      width: 42px;
+      height: 42px;
+      border-radius: 8px;
+      background: var(--accent);
+      color: white;
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      letter-spacing: 0;
+      flex: 0 0 auto;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(20px, 2.2vw, 29px);
+      line-height: 1.25;
+      letter-spacing: 0;
+    }
+
+    .subtitle {
+      margin: 2px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .status-strip {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      min-height: 30px;
+      padding: 3px 10px;
+      border: 1px solid var(--line);
+      background: white;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+
+    main {
+      width: min(1180px, calc(100% - 32px));
+      margin: 26px auto 42px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.08fr) minmax(340px, 0.92fr);
+      gap: 18px;
+      align-items: start;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+
+    .panel-head {
+      padding: 18px 20px 14px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .panel-title {
+      margin: 0;
+      font-size: 18px;
+      line-height: 1.35;
+    }
+
+    .panel-note {
+      color: var(--muted);
+      font-size: 13px;
+      margin: 4px 0 0;
+    }
+
+    form {
+      padding: 18px 20px 20px;
+      display: grid;
+      gap: 16px;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    label {
+      display: grid;
+      gap: 7px;
+      color: #293538;
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    .label-help {
+      color: var(--muted);
+      font-weight: 500;
+      font-size: 12px;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      border: 1px solid #cbd7d3;
+      border-radius: 6px;
+      padding: 10px 11px;
+      background: #fff;
+      color: var(--ink);
+      outline: none;
+    }
+
+    textarea {
+      min-height: 88px;
+      resize: vertical;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.14);
+    }
+
+    .segmented {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .check-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .choice {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 9px;
+      align-items: start;
+      min-height: 58px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 10px;
+      background: #fff;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .choice input {
+      width: 18px;
+      height: 18px;
+      margin: 3px 0 0;
+      accent-color: var(--accent);
+    }
+
+    .choice span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 500;
+      margin-top: 2px;
+    }
+
+    .choice:has(input:checked) {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+    }
+
+    .segment {
+      min-height: 42px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: #fff;
+      color: var(--ink);
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .segment.active {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+      color: var(--accent-dark);
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      padding-top: 2px;
+    }
+
+    .btn {
+      min-height: 42px;
+      border: 1px solid transparent;
+      border-radius: 6px;
+      padding: 8px 14px;
+      cursor: pointer;
+      font-weight: 800;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-dark);
+    }
+
+    .btn-secondary {
+      background: #fff;
+      color: var(--ink);
+      border-color: var(--line);
+    }
+
+    .btn-secondary:hover {
+      background: #f3f6f4;
+    }
+
+    .output-wrap {
+      padding: 18px 20px 20px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .output-box {
+      min-height: 246px;
+      border: 1px solid #cbd7d3;
+      border-radius: 8px;
+      padding: 15px;
+      background: #fbfcfb;
+      white-space: pre-wrap;
+      font-size: 16px;
+    }
+
+    .meter {
+      display: grid;
+      gap: 8px;
+    }
+
+    .meter-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .bar {
+      height: 10px;
+      background: #e7ece9;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      height: 100%;
+      width: 0%;
+      background: var(--accent);
+      transition: width 180ms ease, background 180ms ease;
+    }
+
+    .keyword-bank {
+      padding: 16px 20px 20px;
+      border-top: 1px solid var(--line);
+    }
+
+    .keyword-bank h3 {
+      margin: 0 0 10px;
+      font-size: 15px;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .chip {
+      border: 1px solid var(--line);
+      background: #fff;
+      border-radius: 999px;
+      padding: 5px 10px;
+      font-size: 13px;
+      color: #344245;
+      cursor: pointer;
+    }
+
+    .chip:hover {
+      border-color: var(--accent);
+      color: var(--accent-dark);
+      background: var(--accent-soft);
+    }
+
+    .notice {
+      border: 1px solid #ecd59d;
+      background: var(--warn-soft);
+      color: var(--warn);
+      padding: 11px 12px;
+      border-radius: 6px;
+      font-size: 13px;
+    }
+
+    .notice-blue {
+      border-color: #b8cdec;
+      background: var(--blue-soft);
+      color: var(--blue);
+    }
+
+    .qr-panel {
+      padding: 16px 20px 20px;
+      border-top: 1px solid var(--line);
+      display: grid;
+      gap: 12px;
+    }
+
+    .qr-row {
+      display: grid;
+      grid-template-columns: 148px 1fr;
+      gap: 14px;
+      align-items: center;
+    }
+
+    .qr-code {
+      width: 148px;
+      height: 148px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: #fff;
+      padding: 8px;
+    }
+
+    .qr-code img {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    .qr-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    .toast {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      background: #1f2a2e;
+      color: white;
+      padding: 10px 14px;
+      border-radius: 6px;
+      box-shadow: var(--shadow);
+      opacity: 0;
+      transform: translateY(8px);
+      pointer-events: none;
+      transition: 160ms ease;
+      z-index: 10;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(31, 42, 46, 0.42);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+      z-index: 20;
+    }
+
+    .modal-backdrop.show {
+      display: flex;
+    }
+
+    .modal {
+      width: min(460px, 100%);
+      background: #fff;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      box-shadow: 0 18px 48px rgba(31, 42, 46, 0.2);
+      padding: 20px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .modal h2 {
+      margin: 0;
+      font-size: 20px;
+      line-height: 1.35;
+    }
+
+    .modal p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    @media (max-width: 900px) {
+      .header-inner {
+        align-items: flex-start;
+        flex-direction: column;
+        justify-content: center;
+        padding: 12px 0;
+      }
+
+      .status-strip {
+        justify-content: flex-start;
+      }
+
+      main {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 620px) {
+      .header-inner, main {
+        width: min(100% - 22px, 1180px);
+      }
+
+      .grid-2, .segmented {
+        grid-template-columns: 1fr;
+      }
+
+      .check-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .qr-row {
+        grid-template-columns: 1fr;
+      }
+
+      .panel-head {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .btn {
+        width: 100%;
+      }
+
+      .actions {
+        display: grid;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <header>
+      <div class="header-inner">
+        <div class="brand">
+          <div class="mark" aria-hidden="true">R</div>
+          <div>
+            <h1>学生アスリート口コミ作成フォーム</h1>
+            <p class="subtitle">院内聞き取りから、約300字の自然な口コミ文を作成</p>
+          </div>
+        </div>
+        <div class="status-strip" aria-label="作成条件">
+          <span class="pill">院内使用</span>
+          <span class="pill">SEO補助</span>
+          <span class="pill">目安 280から340字</span>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="panel" aria-labelledby="form-title">
+        <div class="panel-head">
+          <div>
+            <h2 class="panel-title" id="form-title">聞き取り内容</h2>
+            <p class="panel-note">空欄があっても作成できます。具体的なほど自然な文章になります。</p>
+          </div>
+        </div>
+
+        <form id="reviewForm">
+          <div class="grid-2">
+            <label>
+              学年・年代
+              <input id="grade" autocomplete="off" placeholder="例：高校2年生、中学生">
+            </label>
+            <label>
+              競技名
+              <input id="sport" autocomplete="off" placeholder="例：野球、サッカー、バスケットボール">
+            </label>
+          </div>
+
+          <div class="grid-2">
+            <label>
+              症状・部位
+              <input id="symptom" autocomplete="off" placeholder="例：投球時の肩の痛み、膝の痛み">
+            </label>
+            <label>
+              困っていた動き
+              <input id="movement" autocomplete="off" placeholder="例：ダッシュ、ジャンプ、切り返し、投げる動作">
+            </label>
+          </div>
+
+          <label>
+            来院前の悩み
+            <span class="label-help">大会前の不安、練習への影響、我慢していたことなど</span>
+            <textarea id="before" placeholder="例：大会が近く、練習を休みたくない気持ちがありましたが、痛みで思い切って動けませんでした。"></textarea>
+          </label>
+
+          <div>
+            <label>
+              当院の良かったところ
+              <span class="label-help">複数選択できます。選んだ内容が口コミ文に入ります。</span>
+            </label>
+            <div class="check-grid" id="strengths">
+              <label class="choice">
+                <input type="checkbox" value="echo">
+                エコー検査
+                <span>状態を画像で確認できて安心</span>
+              </label>
+              <label class="choice">
+                <input type="checkbox" value="rehab">
+                リハビリ施設
+                <span>競技復帰に向けた運動まで相談できる</span>
+              </label>
+              <label class="choice">
+                <input type="checkbox" value="physioshot">
+                フィジオショット
+                <span>特殊治療も選択肢として相談できる</span>
+              </label>
+              <label class="choice">
+                <input type="checkbox" value="acupuncture">
+                鍼治療
+                <span>体の状態に合わせて施術を相談できる</span>
+              </label>
+              <label class="choice">
+                <input type="checkbox" value="explain">
+                説明がわかりやすい
+                <span>原因や通院の流れが理解しやすい</span>
+              </label>
+              <label class="choice">
+                <input type="checkbox" value="return">
+                復帰相談がしやすい
+                <span>部活や試合に合わせて相談できる</span>
+              </label>
+            </div>
+          </div>
+
+          <label>
+            通院後に感じた変化
+            <span class="label-help">動きやすさ、不安の減少、練習復帰、再発予防の意識など</span>
+            <textarea id="change" placeholder="例：少しずつ動きやすくなり、練習でも不安なくプレーできる場面が増えました。"></textarea>
+          </label>
+
+          <div class="grid-2">
+            <label>
+              おすすめしたい人
+              <input id="recommend" autocomplete="off" placeholder="例：部活のケガで悩む学生アスリート">
+            </label>
+            <label>
+              地域名・院名
+              <input id="clinic" autocomplete="off" placeholder="例：地域名や院名を入れる場合のみ">
+            </label>
+          </div>
+
+          <label>
+            Google口コミ投稿ページURL
+            <span class="label-help">一度入れると保存されます。未入力でも口コミ作成はできます。</span>
+            <input id="googleUrl" autocomplete="off" value="https://g.page/r/CdyujwVnwC3uEAE/review" placeholder="例：https://g.page/r/.../review">
+          </label>
+
+          <div>
+            <label>
+              文章の目線
+            </label>
+            <div class="segmented" role="group" aria-label="文章の目線">
+              <button type="button" class="segment active" data-tone="student">本人</button>
+              <button type="button" class="segment" data-tone="parent">保護者</button>
+              <button type="button" class="segment" data-tone="neutral">自然な第三者</button>
+            </div>
+          </div>
+
+          <div class="actions">
+            <button class="btn btn-primary" type="submit">作成する</button>
+            <button class="btn btn-secondary" type="button" id="sampleBtn">例文を入れる</button>
+            <button class="btn btn-secondary" type="button" id="clearBtn">リセット</button>
+          </div>
+        </form>
+      </section>
+
+      <aside class="panel" aria-labelledby="output-title">
+        <div class="panel-head">
+          <div>
+            <h2 class="panel-title" id="output-title">口コミ文</h2>
+            <p class="panel-note">必要に応じて手直ししてから使用してください。</p>
+          </div>
+          <button class="btn btn-secondary" type="button" id="copyBtn">コピー</button>
+          <button class="btn btn-primary" type="button" id="copyOpenBtn">コピーしてGoogleへ</button>
+        </div>
+
+        <div class="output-wrap">
+          <div class="meter" aria-live="polite">
+            <div class="meter-row">
+              <span id="countText">0字</span>
+              <span id="targetText">目安 280から340字</span>
+            </div>
+            <div class="bar" aria-hidden="true"><div class="bar-fill" id="barFill"></div></div>
+          </div>
+          <div class="output-box" id="output" contenteditable="true" aria-label="作成された口コミ文">ここに作成された口コミ文が表示されます。</div>
+          <div class="notice">効果を保証する表現や、治る・完治などの断定表現は避け、体験談として自然な表現に整えてください。</div>
+          <div class="notice notice-blue">Google口コミは任意です。院内Wi-Fiでこのフォームを開いて口コミ文を作成し、コピー後にこの画面を閉じずにWi-FiをオフにしてからGoogleへ進むのがおすすめです。投稿前に、ご自身の体験に沿って内容を確認・修正してください。</div>
+        </div>
+
+        <div class="keyword-bank">
+          <h3>入れやすいSEOキーワード</h3>
+          <div class="chips" id="chips"></div>
+        </div>
+
+        <div class="qr-panel">
+          <div>
+            <h3 class="panel-title">患者さん用QRコード</h3>
+            <p class="panel-note" id="qrNote">公開URLにすると患者さんのスマホで開けます。</p>
+          </div>
+          <div class="qr-row">
+            <div class="qr-code">
+              <img id="appQr" alt="患者さん用フォームQRコード">
+            </div>
+            <div>
+              <label>
+                患者さん用URL
+                <input id="patientUrl" autocomplete="off" placeholder="例：https://review-survey.onrender.com/">
+              </label>
+              <div class="qr-actions">
+                <button class="btn btn-secondary" type="button" id="useCurrentUrlBtn">今のURLを使う</button>
+                <button class="btn btn-secondary" type="button" id="openPatientUrlBtn">開く</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </main>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite">コピーしました</div>
+
+  <div class="modal-backdrop" id="mobileDataModal" role="dialog" aria-modal="true" aria-labelledby="mobileDataTitle">
+    <div class="modal">
+      <h2 id="mobileDataTitle">この画面を閉じずにWi-Fiをオフにしてください</h2>
+      <p>フォームはすでに開けています。Google口コミが反映されにくくなる可能性を避けるため、ここでWi-Fiだけをオフにしてから進むのがおすすめです。</p>
+      <p>口コミ文はコピー済みです。Wi-Fiをオフにしたら「Googleへ進む」を押し、Googleページで内容を確認・修正してから投稿してください。</p>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" type="button" id="cancelGoogleBtn">戻る</button>
+        <button class="btn btn-primary" type="button" id="continueGoogleBtn">Googleへ進む</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const fields = ["grade", "sport", "symptom", "movement", "before", "change", "recommend", "clinic", "googleUrl", "patientUrl"];
+    const defaultGoogleUrl = "https://g.page/r/CdyujwVnwC3uEAE/review";
+    const strengthLabels = {
+      echo: "エコー検査で状態を画像でも確認できたので安心感がありました",
+      rehab: "リハビリ施設があり、競技復帰に向けた運動まで相談できました",
+      physioshot: "特殊治療のフィジオショットも選択肢として相談できました",
+      acupuncture: "鍼治療もあり、体の状態に合わせて施術を相談できました",
+      explain: "痛みの原因や体の使い方をわかりやすく説明してもらえました",
+      return: "練習量や試合に向けた復帰のタイミングも相談しやすかったです"
+    };
+    const keywords = [
+      "学生アスリート", "部活のケガ", "スポーツ障害", "競技復帰", "早期復帰", "再発予防",
+      "野球肩", "野球肘", "膝の痛み", "足首の捻挫", "シンスプリント", "オスグッド",
+      "腰痛", "肩の痛み", "走ると痛い", "ジャンプで痛い", "試合前のケア", "整骨院", "接骨院", "整体"
+    ];
+
+    const samples = {
+      grade: "高校2年生",
+      sport: "サッカー",
+      symptom: "膝の痛み",
+      movement: "ダッシュや切り返し",
+      before: "大会が近い中で練習を続けたい気持ちはありましたが、プレー中の痛みが気になり思い切って動けませんでした。",
+      change: "少しずつ動きやすさを感じ、練習でも不安なくプレーできる場面が増えました。再発予防の意識も高まりました。",
+      recommend: "部活のケガやスポーツ障害で悩む学生アスリート",
+      clinic: "",
+      googleUrl: defaultGoogleUrl,
+      patientUrl: ""
+    };
+
+    let tone = "student";
+
+    const byId = (id) => document.getElementById(id);
+    const value = (id) => byId(id).value.trim();
+
+    function normalize(text) {
+      return text.replace(/\s+/g, " ").replace(/。+/g, "。").trim();
+    }
+
+    function sentence(text, fallback) {
+      const source = normalize(text || fallback);
+      if (!source) return "";
+      return /[。！？]$/.test(source) ? source : `${source}。`;
+    }
+
+    function buildReview() {
+      const grade = value("grade") || "学生";
+      const sport = value("sport") || "スポーツ";
+      const symptom = value("symptom") || "体の痛み";
+      const movement = value("movement") || "練習中の動き";
+      const before = sentence(value("before"), `${movement}のときに${symptom}があり、部活や試合への影響が不安でした`);
+      const selectedStrengths = getSelectedStrengths();
+      const support = sentence(selectedStrengths.join("。"), "痛みの原因や体の使い方をわかりやすく説明してもらい、施術だけでなく自宅でできるセルフケアも教えてもらえました");
+      const change = sentence(value("change"), "通院するうちに動きやすさを感じ、安心して練習に取り組める場面が増えました");
+      const recommend = value("recommend") || "部活のケガやスポーツ障害で悩む学生アスリート";
+      const clinic = value("clinic");
+
+      const opener = {
+        student: `私は${grade}で${sport}をしており、${symptom}で来院しました。`,
+        parent: `子どもが${grade}で${sport}をしており、${symptom}の相談で来院しました。`,
+        neutral: `${grade}の${sport}選手として活動している中で、${symptom}があり来院しました。`
+      }[tone];
+
+      const clinicPart = clinic ? `${clinic}で相談できて良かったです。` : "";
+      const seoLine = `${recommend}、競技復帰や再発予防を考えている方におすすめです。`;
+
+      return normalize([
+        opener,
+        before,
+        support,
+        change,
+        clinicPart,
+        seoLine
+      ].filter(Boolean).join(""));
+    }
+
+    function getSelectedStrengths() {
+      return Array.from(document.querySelectorAll("#strengths input:checked"))
+        .map((input) => strengthLabels[input.value])
+        .filter(Boolean);
+    }
+
+    function updateMeter() {
+      const text = byId("output").innerText.trim();
+      const count = text === "ここに作成された口コミ文が表示されます。" ? 0 : text.length;
+      byId("countText").textContent = `${count}字`;
+      const percent = Math.min(100, Math.round((count / 340) * 100));
+      byId("barFill").style.width = `${percent}%`;
+
+      if (count >= 280 && count <= 340) {
+        byId("targetText").textContent = "ちょうど良い長さです";
+        byId("barFill").style.background = "var(--accent)";
+      } else if (count > 340) {
+        byId("targetText").textContent = "少し長めです";
+        byId("barFill").style.background = "var(--warn)";
+      } else {
+        byId("targetText").textContent = "目安 280から340字";
+        byId("barFill").style.background = "var(--blue)";
+      }
+    }
+
+    function showToast(message) {
+      const toast = byId("toast");
+      toast.textContent = message;
+      toast.classList.add("show");
+      window.setTimeout(() => toast.classList.remove("show"), 1500);
+    }
+
+    function showMobileDataModal(googleUrl) {
+      const modal = byId("mobileDataModal");
+      modal.dataset.googleUrl = googleUrl;
+      modal.classList.add("show");
+    }
+
+    function hideMobileDataModal() {
+      byId("mobileDataModal").classList.remove("show");
+    }
+
+    function updateQr() {
+      const patientUrl = value("patientUrl") || window.location.href;
+      byId("patientUrl").value = patientUrl;
+      byId("appQr").src = `https://api.qrserver.com/v1/create-qr-code/?size=260x260&margin=10&data=${encodeURIComponent(patientUrl)}`;
+
+      if (patientUrl.includes("127.0.0.1") || patientUrl.includes("localhost")) {
+        byId("qrNote").textContent = "このURLは院内パソコン専用です。公開URLに変更するとスマホで開けます。";
+      } else if (patientUrl.includes("192.168.") || patientUrl.includes("10.") || patientUrl.includes("172.")) {
+        byId("qrNote").textContent = "院内Wi-Fiでフォームを開くQRです。投稿直前だけWi-Fiをオフにしてください。";
+      } else {
+        byId("qrNote").textContent = "このQRコードを読み取ると患者さんのスマホでフォームが開きます。";
+      }
+    }
+
+    function saveDraft() {
+      const data = Object.fromEntries(fields.map((id) => [id, byId(id).value]));
+      data.tone = tone;
+      data.output = byId("output").innerText;
+      data.strengths = Array.from(document.querySelectorAll("#strengths input:checked")).map((input) => input.value);
+      localStorage.setItem("studentAthleteReviewDraft", JSON.stringify(data));
+    }
+
+    function loadDraft() {
+      try {
+        const data = JSON.parse(localStorage.getItem("studentAthleteReviewDraft") || "{}");
+        fields.forEach((id) => {
+          if (typeof data[id] === "string") byId(id).value = data[id];
+        });
+        if (Array.isArray(data.strengths)) {
+          document.querySelectorAll("#strengths input").forEach((input) => {
+            input.checked = data.strengths.includes(input.value);
+          });
+        }
+        if (data.tone) setTone(data.tone);
+        if (data.output) byId("output").innerText = data.output;
+        if (!value("googleUrl")) byId("googleUrl").value = defaultGoogleUrl;
+        if (!value("patientUrl")) byId("patientUrl").value = window.location.href;
+      } catch {
+        byId("googleUrl").value = defaultGoogleUrl;
+        byId("patientUrl").value = window.location.href;
+        return;
+      }
+    }
+
+    function setTone(nextTone) {
+      tone = nextTone;
+      document.querySelectorAll(".segment").forEach((button) => {
+        button.classList.toggle("active", button.dataset.tone === tone);
+      });
+    }
+
+    function renderChips() {
+      const container = byId("chips");
+      keywords.forEach((keyword) => {
+        const chip = document.createElement("button");
+        chip.className = "chip";
+        chip.type = "button";
+        chip.textContent = keyword;
+        chip.addEventListener("click", () => {
+          const recommend = byId("recommend");
+          recommend.value = recommend.value ? `${recommend.value}、${keyword}` : keyword;
+          saveDraft();
+        });
+        container.appendChild(chip);
+      });
+    }
+
+    byId("reviewForm").addEventListener("submit", (event) => {
+      event.preventDefault();
+      byId("output").innerText = buildReview();
+      updateMeter();
+      saveDraft();
+    });
+
+    byId("copyBtn").addEventListener("click", async () => {
+      await copyReview();
+    });
+
+    byId("copyOpenBtn").addEventListener("click", async () => {
+      const googleUrl = value("googleUrl");
+      if (!googleUrl) {
+        showToast("Google口コミURLを入力してください");
+        return;
+      }
+      ensureReviewText();
+      const copied = await copyReview();
+      if (!copied) {
+        return;
+      }
+      showMobileDataModal(googleUrl);
+    });
+
+    byId("cancelGoogleBtn").addEventListener("click", hideMobileDataModal);
+
+    byId("continueGoogleBtn").addEventListener("click", () => {
+      const googleUrl = byId("mobileDataModal").dataset.googleUrl || value("googleUrl");
+      window.location.href = googleUrl;
+    });
+
+    async function copyReview() {
+      const text = byId("output").innerText.trim();
+      if (!text || text === "ここに作成された口コミ文が表示されます。") {
+        showToast("先に口コミ文を作成してください");
+        return false;
+      }
+      try {
+        if (navigator.clipboard && window.isSecureContext) {
+          await navigator.clipboard.writeText(text);
+        } else {
+          copyWithTextArea(text);
+        }
+        showToast("コピーしました");
+        return true;
+      } catch {
+        try {
+          copyWithTextArea(text);
+          showToast("コピーしました");
+          return true;
+        } catch {
+          selectOutputText();
+          showToast("文章を選択しました。コピーしてからGoogleへ進んでください");
+          return false;
+        }
+      }
+    }
+
+    function ensureReviewText() {
+      const text = byId("output").innerText.trim();
+      if (!text || text === "ここに作成された口コミ文が表示されます。") {
+        byId("output").innerText = buildReview();
+        updateMeter();
+        saveDraft();
+      }
+    }
+
+    function copyWithTextArea(text) {
+      const textarea = document.createElement("textarea");
+      textarea.value = text;
+      textarea.setAttribute("readonly", "");
+      textarea.style.position = "fixed";
+      textarea.style.top = "0";
+      textarea.style.left = "0";
+      textarea.style.width = "1px";
+      textarea.style.height = "1px";
+      textarea.style.opacity = "0";
+      document.body.appendChild(textarea);
+      textarea.focus();
+      textarea.select();
+      textarea.setSelectionRange(0, textarea.value.length);
+      const ok = document.execCommand("copy");
+      document.body.removeChild(textarea);
+      if (!ok) throw new Error("copy failed");
+    }
+
+    function selectOutputText() {
+      const output = byId("output");
+      const range = document.createRange();
+      range.selectNodeContents(output);
+      const selection = window.getSelection();
+      selection.removeAllRanges();
+      selection.addRange(range);
+    }
+
+    byId("sampleBtn").addEventListener("click", () => {
+      fields.forEach((id) => {
+        byId(id).value = samples[id] || "";
+      });
+      document.querySelectorAll("#strengths input").forEach((input) => {
+        input.checked = ["echo", "rehab", "explain", "return"].includes(input.value);
+      });
+      setTone("student");
+      byId("output").innerText = buildReview();
+      updateMeter();
+      saveDraft();
+    });
+
+    byId("clearBtn").addEventListener("click", () => {
+      fields.forEach((id) => {
+        byId(id).value = "";
+      });
+      document.querySelectorAll("#strengths input").forEach((input) => {
+        input.checked = false;
+      });
+      setTone("student");
+      byId("output").innerText = "ここに作成された口コミ文が表示されます。";
+      localStorage.removeItem("studentAthleteReviewDraft");
+      byId("googleUrl").value = defaultGoogleUrl;
+      byId("patientUrl").value = window.location.href;
+      updateQr();
+      updateMeter();
+    });
+
+    byId("useCurrentUrlBtn").addEventListener("click", () => {
+      byId("patientUrl").value = window.location.href;
+      updateQr();
+      saveDraft();
+    });
+
+    byId("openPatientUrlBtn").addEventListener("click", () => {
+      const patientUrl = value("patientUrl");
+      if (!patientUrl) return;
+      window.open(patientUrl, "_blank");
+    });
+
+    document.querySelectorAll(".segment").forEach((button) => {
+      button.addEventListener("click", () => {
+        setTone(button.dataset.tone);
+        saveDraft();
+      });
+    });
+
+    fields.forEach((id) => byId(id).addEventListener("input", saveDraft));
+    byId("patientUrl").addEventListener("input", updateQr);
+    document.querySelectorAll("#strengths input").forEach((input) => input.addEventListener("change", saveDraft));
+    byId("output").addEventListener("input", () => {
+      updateMeter();
+      saveDraft();
+    });
+
+    renderChips();
+    loadDraft();
+    updateQr();
+    updateMeter();
+  </script>
+</body>
+</html>
